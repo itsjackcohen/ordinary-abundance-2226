@@ -40,6 +40,15 @@ pointer-events:none;z-index:0;
 }
 .wrap{position:relative;z-index:1;}
 
+/* ---------- LIGHT RAYS ---------- */
+#light-rays{
+position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;display:block;
+opacity:.85;
+}
+@media(prefers-reduced-motion: reduce){
+#light-rays{display:none;}
+}
+
 /* ---------- HERO ---------- */
 .hero{
 min-height:100vh;
@@ -206,6 +215,7 @@ body{background:var(--paper);}
 </style>
 </head>
 <body>
+<canvas id="light-rays" aria-hidden="true"></canvas>
 <div class="wrap">
 
 <!-- HERO -->
@@ -558,8 +568,7 @@ The original <em>Ordinary Abundance</em> borrows dead voices to restore our wond
 <p class="pull">It is to humanity's credit that we remain restless in the midst of all of this progress.</p>
 <p>That one line, lifted whole from the first edition, is the only sentence in this house that needs no updating. The miracles turn over. The restlessness does not. It is what built every room here, and it is already at work on the rooms neither we nor the people of 2226 can yet picture.</p>
 <div class="credit">
-A companion to <a href="https://ordinaryabundance.com/">Ordinary Abundance</a>, built by Jordan Dworkin<br>
-Imagined forward &middot; Drafted with Dia<br>
+A companion to <a href="https://ordinaryabundance.com/">Ordinary Abundance</a> by Jordan Dworkin<br>
 Built with Dia &amp; Claude by <a href="https://x.com/itsjackcohen" target="_blank" rel="noopener">Jack Cohen</a>
 </div>
 </div>
@@ -577,6 +586,165 @@ const io = new IntersectionObserver((items)=>{
 items.forEach(it=>{ if(it.isIntersecting) it.target.classList.add('in'); });
 },{threshold:0.18, rootMargin:'0px 0px -8% 0px'});
 entries.forEach(e=>io.observe(e));
+</script>
+
+<script>
+(function(){
+var canvas = document.getElementById('light-rays');
+if (!canvas) return;
+if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+var gl = canvas.getContext('webgl', { alpha: true, antialias: true, premultipliedAlpha: false }) ||
+         canvas.getContext('experimental-webgl', { alpha: true, antialias: true, premultipliedAlpha: false });
+if (!gl) return;
+
+var vertSrc =
+'attribute vec2 position;' +
+'void main(){' +
+'gl_Position = vec4(position, 0.0, 1.0);' +
+'}';
+
+var fragSrc =
+'precision highp float;' +
+'uniform float iTime;' +
+'uniform vec2 iResolution;' +
+'uniform vec2 rayPos;' +
+'uniform vec2 rayDir;' +
+'uniform vec3 raysColor;' +
+'uniform float raysSpeed;' +
+'uniform float lightSpread;' +
+'uniform float rayLength;' +
+'uniform float fadeDistance;' +
+'uniform float noiseAmount;' +
+'float noise(vec2 st){' +
+'return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123);' +
+'}' +
+'float rayStrength(vec2 raySource, vec2 rayRefDirection, vec2 coord, float seedA, float seedB, float speed){' +
+'vec2 sourceToCoord = coord - raySource;' +
+'vec2 dirNorm = normalize(sourceToCoord);' +
+'float cosAngle = dot(dirNorm, rayRefDirection);' +
+'float spreadFactor = pow(max(cosAngle, 0.0), 1.0 / max(lightSpread, 0.001));' +
+'float distance = length(sourceToCoord);' +
+'float maxDistance = iResolution.x * rayLength;' +
+'float lengthFalloff = clamp((maxDistance - distance) / maxDistance, 0.0, 1.0);' +
+'float fadeFalloff = clamp((iResolution.x * fadeDistance - distance) / (iResolution.x * fadeDistance), 0.5, 1.0);' +
+'float baseStrength = clamp(' +
+'(0.45 + 0.15 * sin(cosAngle * seedA + iTime * speed)) +' +
+'(0.3 + 0.2 * cos(-cosAngle * seedB + iTime * speed)),' +
+'0.0, 1.0' +
+');' +
+'return baseStrength * lengthFalloff * fadeFalloff * spreadFactor;' +
+'}' +
+'void main(){' +
+'vec2 coord = vec2(gl_FragCoord.x, iResolution.y - gl_FragCoord.y);' +
+'float rays1 = rayStrength(rayPos, rayDir, coord, 36.2214, 21.11349, 1.5 * raysSpeed);' +
+'float rays2 = rayStrength(rayPos, rayDir, coord, 22.3991, 18.0234, 1.1 * raysSpeed);' +
+'float strength = rays1 * 0.5 + rays2 * 0.4;' +
+'if (noiseAmount > 0.0) {' +
+'float n = noise(coord * 0.01 + iTime * 0.1);' +
+'strength *= (1.0 - noiseAmount + noiseAmount * n);' +
+'}' +
+'float brightness = 1.0 - (coord.y / iResolution.y);' +
+'strength *= 0.35 + brightness * 0.65;' +
+'strength *= 0.55;' +
+'gl_FragColor = vec4(raysColor, strength);' +
+'}';
+
+function compile(type, src){
+var s = gl.createShader(type);
+gl.shaderSource(s, src);
+gl.compileShader(s);
+if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+gl.deleteShader(s);
+return null;
+}
+return s;
+}
+
+var vs = compile(gl.VERTEX_SHADER, vertSrc);
+var fs = compile(gl.FRAGMENT_SHADER, fragSrc);
+if (!vs || !fs) return;
+
+var program = gl.createProgram();
+gl.attachShader(program, vs);
+gl.attachShader(program, fs);
+gl.linkProgram(program);
+if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return;
+gl.useProgram(program);
+
+var posBuffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
+var posLoc = gl.getAttribLocation(program, 'position');
+gl.enableVertexAttribArray(posLoc);
+gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+
+var u = {
+iTime: gl.getUniformLocation(program, 'iTime'),
+iResolution: gl.getUniformLocation(program, 'iResolution'),
+rayPos: gl.getUniformLocation(program, 'rayPos'),
+rayDir: gl.getUniformLocation(program, 'rayDir'),
+raysColor: gl.getUniformLocation(program, 'raysColor'),
+raysSpeed: gl.getUniformLocation(program, 'raysSpeed'),
+lightSpread: gl.getUniformLocation(program, 'lightSpread'),
+rayLength: gl.getUniformLocation(program, 'rayLength'),
+fadeDistance: gl.getUniformLocation(program, 'fadeDistance'),
+noiseAmount: gl.getUniformLocation(program, 'noiseAmount')
+};
+
+gl.enable(gl.BLEND);
+gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+var raysColor = [1.0, 0.93, 0.72];
+var raysSpeed = 0.32;
+var lightSpread = 0.95;
+var rayLength = 1.7;
+var fadeDistance = 1.35;
+var noiseAmount = 0.05;
+
+gl.uniform3f(u.raysColor, raysColor[0], raysColor[1], raysColor[2]);
+gl.uniform1f(u.raysSpeed, raysSpeed);
+gl.uniform1f(u.lightSpread, lightSpread);
+gl.uniform1f(u.rayLength, rayLength);
+gl.uniform1f(u.fadeDistance, fadeDistance);
+gl.uniform1f(u.noiseAmount, noiseAmount);
+
+var w = 0, h = 0;
+function resize(){
+var dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+w = Math.round(canvas.clientWidth * dpr);
+h = Math.round(canvas.clientHeight * dpr);
+canvas.width = w;
+canvas.height = h;
+gl.viewport(0, 0, w, h);
+gl.uniform2f(u.iResolution, w, h);
+var outside = 0.15;
+gl.uniform2f(u.rayPos, 0.5 * w, -outside * h);
+gl.uniform2f(u.rayDir, 0, 1);
+}
+
+window.addEventListener('resize', resize);
+resize();
+
+var rafId = null;
+function loop(t){
+gl.uniform1f(u.iTime, t * 0.001);
+gl.clear(gl.COLOR_BUFFER_BIT);
+gl.drawArrays(gl.TRIANGLES, 0, 3);
+rafId = requestAnimationFrame(loop);
+}
+
+document.addEventListener('visibilitychange', function(){
+if (document.hidden) {
+if (rafId) cancelAnimationFrame(rafId);
+rafId = null;
+} else if (!rafId) {
+rafId = requestAnimationFrame(loop);
+}
+});
+
+rafId = requestAnimationFrame(loop);
+})();
 </script>
 </body>
 </html>
