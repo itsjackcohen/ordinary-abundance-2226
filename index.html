@@ -95,7 +95,7 @@ animation:drop 2.4s ease-in-out infinite;
 @keyframes drop{0%,100%{opacity:.3;transform:scaleY(.6);}50%{opacity:1;transform:scaleY(1);}}
 
 /* ---------- ROOM HEADERS ---------- */
-.room{padding:14vh 24px 6vh;position:relative;}
+.room{padding:8vh 24px 3vh;position:relative;}
 .room-inner{max-width:820px;margin:0 auto;}
 .room-head{
 text-align:center;margin-bottom:8vh;
@@ -113,6 +113,15 @@ margin-top:1.6rem;max-width:56ch;margin-left:auto;margin-right:auto;
 color:var(--ink-soft);font-size:1.08rem;
 }
 
+/* ---------- ROOM VISUALS ---------- */
+.room-visual{
+max-width:300px;margin:0 auto 6vh;opacity:.92;
+}
+.room-visual svg{display:block;width:100%;height:auto;}
+@media(max-width:600px){
+.room-visual{max-width:220px;margin-bottom:4.5vh;}
+}
+
 /* ---------- OBJECT ENTRIES ---------- */
 .entry{
 max-width:680px;margin:0 auto 9vh;
@@ -120,6 +129,7 @@ opacity:0;transform:translateY(28px);
 transition:opacity 1s ease, transform 1s ease;
 }
 .entry.in{opacity:1;transform:none;}
+.entry:last-child{margin-bottom:0;}
 .entry .obj-name{
 font-family:var(--sans);
 text-transform:uppercase;letter-spacing:.16em;
@@ -221,6 +231,27 @@ The original <em>Ordinary Abundance</em> borrows dead voices to restore our wond
 <p class="scene">The room is quiet, but you are not alone in it. You ask the air a half-formed question and it answers in your grandmother's cadence — she has been gone sixty years. A wall softens into a window onto a shoreline that does not exist. You settle in to think, and the room thinks alongside you.</p>
 </div>
 
+<div class="room-visual" aria-hidden="true">
+<svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A single orb of light surrounded by concentric rings, with scattered points of thought around it">
+<circle cx="200" cy="130" r="108" fill="#f4efe6" stroke="#a67c3d" stroke-width="1.5" opacity="0.9"/>
+<circle cx="200" cy="130" r="114" fill="none" stroke="#a67c3d" stroke-width="0.75" opacity="0.35"/>
+<g fill="none" stroke="#8a8175" stroke-width="1">
+<circle cx="200" cy="130" r="26" opacity="0.7"/>
+<circle cx="200" cy="130" r="44" opacity="0.5"/>
+<circle cx="200" cy="130" r="62" opacity="0.32"/>
+<circle cx="200" cy="130" r="80" opacity="0.18"/>
+</g>
+<circle cx="200" cy="130" r="10" fill="#7c5a26" opacity="0.85"/>
+<g fill="#a67c3d">
+<circle cx="152" cy="92" r="3" opacity="0.75"/>
+<circle cx="253" cy="101" r="2.4" opacity="0.7"/>
+<circle cx="168" cy="176" r="2" opacity="0.6"/>
+<circle cx="240" cy="170" r="3.2" opacity="0.7"/>
+<circle cx="200" cy="196" r="2.2" opacity="0.55"/>
+</g>
+</svg>
+</div>
+
 <div class="entry">
 <div class="obj-name">A mind to talk to</div>
 <blockquote>It listened, it reasoned, it wrote back — and I kept forgetting there was no one there. We had spent the whole of our history alone inside our own heads. Now the head had company.</blockquote>
@@ -251,6 +282,23 @@ The original <em>Ordinary Abundance</em> borrows dead voices to restore our wond
 <div class="time">Nine o'clock</div>
 <h2>The kitchen</h2>
 <p class="scene">You are not hungry so much as curious. You name a dish your great-grandmother used to make and could never quite write down; the counter builds it from the memory of her hands. The meat was never an animal. The fruit never crossed an ocean, because the tree is three rooms away.</p>
+</div>
+
+<div class="room-visual" aria-hidden="true">
+<svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A gentle branch bearing four small round fruits, with steam rising above">
+<circle cx="200" cy="130" r="108" fill="#f4efe6" stroke="#a67c3d" stroke-width="1.5" opacity="0.9"/>
+<circle cx="200" cy="130" r="114" fill="none" stroke="#a67c3d" stroke-width="0.75" opacity="0.35"/>
+<path d="M130,160 Q200,110 270,160" fill="none" stroke="#5c554c" stroke-width="1.4" stroke-linecap="round"/>
+<circle cx="150" cy="145" r="9" fill="#a67c3d" opacity="0.8"/>
+<circle cx="185" cy="122" r="8" fill="#7c5a26" opacity="0.75"/>
+<circle cx="215" cy="122" r="8" fill="#a67c3d" opacity="0.8"/>
+<circle cx="250" cy="145" r="9" fill="#7c5a26" opacity="0.75"/>
+<g fill="none" stroke="#8a8175" stroke-width="1" stroke-linecap="round" opacity="0.6">
+<path d="M186,96 C181,86 191,81 186,71 C181,63 189,59 186,51"/>
+<path d="M200,92 C195,82 205,77 200,67 C195,59 203,55 200,47"/>
+<path d="M214,96 C209,86 219,81 214,71 C209,63 217,59 214,51"/>
+</g>
+</svg>
 </div>
 
 <div class="entry">
@@ -285,6 +333,20 @@ The original <em>Ordinary Abundance</em> borrows dead voices to restore our wond
 <p class="scene">The night winds down. You take a drop that keeps the years at bay, the way your ancestors took a nightly pill for a heart they could not otherwise trust. A scan you did not notice reads you head to foot and finds nothing worth waking you for. You sleep because the body, at last, is a solved thing.</p>
 </div>
 
+<div class="room-visual" aria-hidden="true">
+<svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A resting figure beneath calm, radiating pulse arcs, with a single drop nearby">
+<circle cx="200" cy="130" r="108" fill="#f4efe6" stroke="#a67c3d" stroke-width="1.5" opacity="0.9"/>
+<circle cx="200" cy="130" r="114" fill="none" stroke="#a67c3d" stroke-width="0.75" opacity="0.35"/>
+<g fill="none" stroke="#8a8175" stroke-width="1.1">
+<path d="M160,165 A40,40 0 0 1 240,165" opacity="0.85"/>
+<path d="M140,165 A60,60 0 0 1 260,165" opacity="0.5"/>
+<path d="M120,165 A80,80 0 0 1 280,165" opacity="0.28"/>
+</g>
+<path d="M120,168 Q200,188 280,168" fill="none" stroke="#5c554c" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M245,80 C251,90 257,99 245,104 C233,99 239,90 245,80 Z" fill="#7c5a26" opacity="0.7"/>
+</svg>
+</div>
+
 <div class="entry">
 <div class="obj-name">Cancer, made a nuisance</div>
 <blockquote>They caught it at a size no eye could see, corrected it in an afternoon, and sent me home. My mother's generation heard the word and heard a sentence. I heard the word and heard an appointment.</blockquote>
@@ -317,6 +379,18 @@ The original <em>Ordinary Abundance</em> borrows dead voices to restore our wond
 <p class="scene">You have a meeting tomorrow on another continent and it will cost you an hour, not a day. Your closest friend lives where the air is thin and red; you will see them at breakfast. You lie down and, half-asleep, wonder idly what people did back when a life was lived within a week's travel of where it began.</p>
 </div>
 
+<div class="room-visual" aria-hidden="true">
+<svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Two distant points joined by a gentle arcing path, with a small ringed world above">
+<circle cx="200" cy="130" r="108" fill="#f4efe6" stroke="#a67c3d" stroke-width="1.5" opacity="0.9"/>
+<circle cx="200" cy="130" r="114" fill="none" stroke="#a67c3d" stroke-width="0.75" opacity="0.35"/>
+<path d="M140,150 Q200,90 260,110" fill="none" stroke="#8a8175" stroke-width="1.2" stroke-dasharray="2 7" stroke-linecap="round"/>
+<circle cx="140" cy="150" r="10" fill="#5c554c" opacity="0.8"/>
+<circle cx="260" cy="110" r="8" fill="#7c5a26" opacity="0.85"/>
+<circle cx="260" cy="110" r="17" fill="none" stroke="#a67c3d" stroke-width="1" opacity="0.5"/>
+<circle cx="203" cy="103" r="3" fill="#a67c3d" opacity="0.8"/>
+</svg>
+</div>
+
 <div class="entry">
 <div class="obj-name">The ocean, made an hour</div>
 <blockquote>Wilbur Wright said flight was an ideal handed down by ancestors who watched the birds. We kept the ideal but lost the awe — I board, I read a chapter, I land on the far side of the earth, mildly annoyed at the queue.</blockquote>
@@ -347,6 +421,30 @@ The original <em>Ordinary Abundance</em> borrows dead voices to restore our wond
 <div class="time">A room the first edition could not build</div>
 <h2>What we had, and they recovered</h2>
 <p class="scene">Every prior room borrowed our era's awe at the things we gained. This one is different. Here the curator of 2226 keeps the objects they had to <em>win back</em> — the ordinary goods we held and lost in our own century, and the quotes come not from wonder but from mourning. In this room, the astonished voices are ours.</p>
+</div>
+
+<div class="room-visual" aria-hidden="true">
+<svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A night sky of restored stars above a quiet horizon and a single tree">
+<circle cx="200" cy="130" r="108" fill="#ece5d8" stroke="#4f5b57" stroke-width="1.5" opacity="0.9"/>
+<circle cx="200" cy="130" r="114" fill="none" stroke="#4f5b57" stroke-width="0.75" opacity="0.3"/>
+<g fill="#7c5a26">
+<circle cx="160" cy="90" r="1.6" opacity="0.7"/>
+<circle cx="185" cy="70" r="2.2" opacity="0.8"/>
+<circle cx="220" cy="75" r="1.4" opacity="0.6"/>
+<circle cx="245" cy="95" r="1.8" opacity="0.7"/>
+<circle cx="200" cy="60" r="2.8" opacity="0.9"/>
+<circle cx="150" cy="120" r="1.3" opacity="0.55"/>
+<circle cx="258" cy="118" r="1.5" opacity="0.6"/>
+<circle cx="232" cy="55" r="1.2" opacity="0.5"/>
+</g>
+<path d="M120,190 Q200,174 280,190" fill="none" stroke="#5c554c" stroke-width="1.4" stroke-linecap="round"/>
+<g stroke="#5c554c" stroke-width="1.3" stroke-linecap="round">
+<line x1="200" y1="190" x2="200" y2="163"/>
+<line x1="200" y1="167" x2="187" y2="152"/>
+<line x1="200" y1="167" x2="213" y2="150"/>
+<line x1="200" y1="175" x2="211" y2="164"/>
+</g>
+</svg>
 </div>
 
 <div class="entry">
